@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "VigilMotion",
+    "slug": "vigilmotion",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#020617"
+    },
+    "android": {
+      "package": "com.vigilmotion.app",
+      "permissions": [
+        "POST_NOTIFICATIONS",
+        "VIBRATE"
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#020617"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.vigilmotion.app",
+      "supportsTablet": true
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "color": "#ef4444",
+          "sounds": [
+            "./assets/fall_alert.wav"
+          ]
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "vigilmotion-demo"
+      }
+    }
+  }
+}

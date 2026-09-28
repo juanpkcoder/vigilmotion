@@ -1,0 +1,33 @@
+# Node dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Local Environment Variables
+.env
+.env*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# MicroPython / Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# System / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

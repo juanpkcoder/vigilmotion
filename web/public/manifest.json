@@ -1,0 +1,16 @@
+{
+  "name": "VigilMotion — Monitoreo 24/7",
+  "short_name": "VigilMotion",
+  "description": "Sistema de teleasistencia y detección de caídas para adultos mayores con alertas prioritarias a WhatsApp",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060913",
+  "theme_color": "#060913",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
