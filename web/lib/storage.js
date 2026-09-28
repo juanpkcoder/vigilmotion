@@ -21,7 +21,7 @@ const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 const DEVICES_FILE = path.join(DATA_DIR, 'devices.json');
 
 // Contactos de emergencia predeterminados con soporte de variables de entorno (Vercel)
-const envDesignatedPhone = process.env.DESIGNATED_CONTACT_PHONE || process.env.CALLMEBOT_PHONE || '+573001234567';
+const envDesignatedPhone = process.env.DESIGNATED_CONTACT_PHONE || process.env.CALLMEBOT_PHONE || '+573052078345';
 const envDesignatedName = process.env.DESIGNATED_CONTACT_NAME || 'Mariana Baracaldo (Cuidador Principal)';
 const envCallMeBotKey = process.env.CALLMEBOT_API_KEY || '';
 
