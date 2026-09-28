@@ -40,7 +40,16 @@ MQTT_TOPIC_FALL   = "vigilmotion/%s/fall"     # %s -> DEVICE_ID
 MQTT_TOPIC_STATUS = "vigilmotion/%s/status"   # %s -> DEVICE_ID
 
 # ============================================================
-# 5. PINES DE HARDWARE (ESP32 DevKit V1)
+# 5. ENVIO DIRECTO A WHATSAPP DESDE EL ESP32 (CALLMEBOT)
+# ============================================================
+# Envia alertas directas a WhatsApp desde el propio microcontrolador
+# 1. Manda el mensaje: 'I allow callmebot to send me messages' al +34 644 10 55 84
+# 2. Pega la apikey recibida aqui abajo:
+CALLMEBOT_PHONE   = "+573052078345"
+CALLMEBOT_API_KEY = ""              # Pon aqui tu apikey de 6 digitos recibida del bot
+
+# ============================================================
+# 6. PINES DE HARDWARE (ESP32 DevKit V1)
 # ============================================================
 I2C_SCL_PIN     = 22            # GPIO 22 -> SCL del MPU6050
 I2C_SDA_PIN     = 21            # GPIO 21 -> SDA del MPU6050

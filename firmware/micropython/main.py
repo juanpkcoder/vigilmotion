@@ -356,6 +356,39 @@ def build_payload(evento, fuerza_g, angulo):
         "angulo": round(float(angulo), 1),
     }
 
+def http_send_callmebot(text):
+    """Envia alerta directa a WhatsApp via CallMeBot desde el propio ESP32."""
+    api_key = getattr(config, 'CALLMEBOT_API_KEY', '').strip()
+    phone = getattr(config, 'CALLMEBOT_PHONE', '').strip()
+    if not api_key or not phone:
+        return False
+    try:
+        clean_phone = phone.replace(' ', '').replace('-', '')
+        encoded_text = text.replace(' ', '%20').replace('\n', '%0A')
+        path = "/whatsapp.php?phone=%s&text=%s&apikey=%s" % (clean_phone, encoded_text, api_key)
+
+        s = socket.socket()
+        s.settimeout(5.0)
+        s.connect(("api.callmebot.com", 443))
+        try:
+            import ssl
+        except ImportError:
+            import ussl as ssl
+        try:
+            s = ssl.wrap_socket(s, server_hostname="api.callmebot.com")
+        except:
+            s = ssl.wrap_socket(s)
+
+        req = "GET %s HTTP/1.1\r\nHost: api.callmebot.com\r\nUser-Agent: VigilMotion-ESP32\r\nConnection: close\r\n\r\n" % path
+        s.sendall(req.encode('utf-8'))
+        resp = s.recv(128)
+        s.close()
+        print(">> [WhatsApp ESP32] CallMeBot respuesta:", resp.split(b"\r\n")[0].decode('utf-8', 'ignore'))
+        return True
+    except Exception as e:
+        print("Fallo enviando WhatsApp directo desde ESP32:", e)
+        return False
+
 async def alert_sink(q):
     """
     Consumidor asincrono de alertas. Realiza las llamadas de red y sonido
@@ -378,13 +411,13 @@ async def alert_sink(q):
             print("[Modo Simulacion Activo] No se envia a la red.")
             continue
 
-        # 1. Envio por HTTP Webhook si esta configurado
+        # 1. Envio por HTTP Webhook si esta configurado (Vercel)
         if config.WEBHOOK_URL:
             ok = False
             for attempt in range(3):
                 code = http_post_alert(config.WEBHOOK_URL, json_str, config.WEBHOOK_TOKEN)
                 if code is not None and 200 <= code < 300:
-                    print("Webhook entregado con exito (Codigo: %d)" % code)
+                    print("Webhook entregado con exito a Vercel (Codigo: %d)" % code)
                     ok = True
                     break
                 print("Reintentando Webhook (intento %d/3)..." % (attempt + 1))
@@ -395,6 +428,18 @@ async def alert_sink(q):
         # 2. Envio por MQTT si esta habilitado
         if config.MQTT_ENABLED:
             mqtt_send_fall(payload)
+
+        # 3. Envio directo a WhatsApp via CallMeBot desde el ESP32
+        if getattr(config, 'CALLMEBOT_API_KEY', '') and getattr(config, 'CALLMEBOT_PHONE', ''):
+            is_panic = (payload.get("type") == "panic")
+            msg = (
+                "ALERTA VIGILMOTION: " +
+                ("BOTON DE PANICO" if is_panic else "CAIDA DETECTADA") +
+                " en dispositivo " + config.DEVICE_ID +
+                " (Impacto: " + str(payload.get("impactG", 0)) + "g, " +
+                "Inclinacion: " + str(payload.get("tiltDeg", 0)) + " deg). Verifique de inmediato!"
+            )
+            http_send_callmebot(msg)
 
 # ============================================================
 # TELEMETRIA PERIODICA DE ESTADO (HEARTBEAT)
